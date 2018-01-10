@@ -76,30 +76,50 @@ bool nabored(const string&a) //считает количество единиц 
     return true;
 }
 
+bool CheckParam(char *f1, char*f2, char*f3)
+{
+    ifstream F1(f1);
+    ifstream F2(f2);
+    ifstream F3(f3);
+    if ((!F1.is_open()) || (!F2.is_open()) || (!F3.is_open()))
+    {
+        cout << "\n Check Args! \n";
+        return false;
+    }
+    F1.close();
+    F2.close();
+    F3.close();
+    return true;
+}
 
 class TEXT
 {
-public:
+private:
     string buff;
     vector <string> s;
     vector<char> anf;
+    char* F1;
+    char* F2;
+    char* F3;
+    bool OK;
 
-    void read()
+    void read(char* F1)
     {
-            ifstream fin("C:\\Users\\Ivan\\CLionProjects\\sparrow\\kek.txt");
-            if (!fin.is_open())
-            {
-                cout << "Cannot find the file\n";
-            }
-            fin >> buff;
-            cout << buff << endl;
-            for(int i = 0; i < buff.size(); i++)
-            {
-                s.push_back( nib(i, log2(buff.size())) );
+        ifstream fin(F1);
+        if (!fin.is_open())
+        {
+            cout << "Cannot find the file\n";
+        }
+        fin >> buff;
+        cout << buff << endl;
+        for(int i = 0; i < buff.size(); i++)
+        {
+            s.push_back( nib(i, log2(buff.size())) );
 
-            }
+        }
         for(auto&x:s)
             cout << x << endl;
+        fin.close();
     }
 
     void foo2(string a) // задаем анф
@@ -117,31 +137,32 @@ public:
         foo2(b);
     }
 
-    void nul()
+
+    bool nul()
     {
         if (buff[0] == '0')
         {
-            cout << "T0 +" << endl;
+            return true;
         }
         else
         {
-                cout << "T0 -" << endl;
+            return false;
         }
     }
 
-    void ed()
+    bool ed()
     {
         if (buff[buff.size() -1] == '1')
         {
-            cout << "T1 +" << endl;
+            return true;
         }
         else
         {
-            cout << "T1 -" << endl;
+            return false;
         }
     }
 
-    void smd()
+    bool smd()
     {
         string _buff = buff;
         reverse(_buff.begin(), _buff.end());
@@ -158,34 +179,33 @@ public:
         }
         if(buff == _buff)
         {
-            cout << "SM +" << endl;
+            return true;
         }
         else if (buff != _buff)
         {
-            cout << "SM -" << endl;
+            return false;
         }
     }
 
-    void mono()
+    bool mono()
     {
-     for(int i = 0; i < buff.size() - 1; i++)
-     {
-         for(int j = i + 1; j < buff.size(); j++)
-         {
-             if(nabor(s[i], s[j]))
-             {
-                 if(buff[i]== '1'&&buff[j] == '0')
-                 {
-                     cout << "M -"<<endl;
-                     return;
-                 }
-             }
-         }
-     }
-        cout << "M +" << endl;
+        for(int i = 0; i < buff.size() - 1; i++)
+        {
+            for(int j = i + 1; j < buff.size(); j++)
+            {
+                if(nabor(s[i], s[j]))
+                {
+                    if(buff[i]== '1'&&buff[j] == '0')
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
-    void lin()
+    bool lin()
     {
         foo2(buff);
         for(int i = 0; i < buff.size(); i++)
@@ -194,12 +214,84 @@ public:
             {
                 if(anf[i]=='1')
                 {
-                    cout << "L -"<< endl;
-                    return;
+
+                    return false;
                 }
             }
         }
-        cout << "L +" << endl;
+        return true;
+    }
+
+public:
+
+    TEXT(char* _F1, char* _F2, char* _F3)
+    {
+        F1 = _F1;
+        F2 = _F2;
+        F3 = _F3;
+        if (CheckParam(F1, F2, F3))
+        {
+            read(F1);
+            OK = true;
+        }
+
+
+    }
+
+    bool ready()
+    {
+        return OK;
+    }
+
+    void write()
+    {
+        ofstream fw(F2);
+        if(nul())
+            fw << "+";
+        else
+            fw << "-";
+        if(ed())
+            fw << "+";
+        else
+            fw << "-";
+        if(smd())
+            fw << "+";
+        else
+            fw << "-";
+        if(mono())
+            fw << "+";
+        else
+            fw << "-";
+        if(lin())
+            fw << "+";
+        else
+            fw << "-";
+
+        fw.close();
+    }
+
+    bool TEST()
+    {
+        string test_t;
+        string test_d;
+        ifstream din(F3);
+        ifstream tut(F2);
+        din >> test_t;
+        tut >> test_d;
+        if(test_t == test_d)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    ~TEXT()
+    {
+
     }
 };
 
