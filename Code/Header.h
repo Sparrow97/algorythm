@@ -92,6 +92,16 @@ bool CheckParam(char *f1, char*f2, char*f3)
     return true;
 }
 
+bool checkvector(const string & buff)
+{
+    for (auto &x : buff)
+    {
+        if (x != '0' && x != '1')
+            return true;
+    }
+    return false;
+
+};
 class TEXT
 {
 private:
@@ -106,21 +116,31 @@ private:
     void read(char* F1)
     {
         ifstream fin(F1);
-        if (!fin.is_open())
-        {
-            cout << "Cannot find the file\n";
-        }
         fin >> buff;
-        cout << buff << endl;
-        for(int i = 0; i < buff.size(); i++)
-        {
-            s.push_back( nib(i, log2(buff.size())) );
 
+            for(int i = 0; i < buff.size(); i++)
+            {
+                s.push_back( nib(i, log2(buff.size())) );
+            }
+        if( floor(log2(s.size())) == log2(s.size()))
+        {
+            if(checkvector(buff))
+            OK = true;
+            else
+            {
+                OK = false;
+                cout << "Unknown symbol" << endl;
+            }
+                OK = false;
         }
-        for(auto&x:s)
-            cout << x << endl;
-        fin.close();
-    }
+            else
+            {
+                cout << "Check function" << endl;
+                OK = false;
+            }
+            fin.close();
+        }
+
 
     void foo2(string a) // задаем анф
     {
@@ -234,8 +254,6 @@ public:
             read(F1);
             OK = true;
         }
-
-
     }
 
     bool ready()
