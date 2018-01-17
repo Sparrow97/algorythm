@@ -38,7 +38,7 @@ bool nabor(const string&a, const string&b) // функция сравнимых 
     return true;
 }
 
-string nib(int x, int len)
+string nib(int x, int len) //создает наборы
 {
     string result;
     while (x > 0)
@@ -124,14 +124,13 @@ private:
             }
         if( floor(log2(s.size())) == log2(s.size()))
         {
-            if(checkvector(buff))
+            if(!checkvector(buff))
             OK = true;
             else
             {
                 OK = false;
                 cout << "Unknown symbol" << endl;
             }
-                OK = false;
         }
             else
             {
@@ -252,7 +251,10 @@ public:
         if (CheckParam(F1, F2, F3))
         {
             read(F1);
-            OK = true;
+        }
+        else
+        {
+         OK = false;
         }
     }
 
